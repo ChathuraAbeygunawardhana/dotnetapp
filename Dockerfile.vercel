@@ -1,0 +1,24 @@
+# --- Build stage ---
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+# Copy project manifest first so Docker can cache the restore layer
+COPY HelloWorld.csproj ./
+RUN dotnet restore
+
+# Copy source and publish a self-contained Release build
+COPY Program.cs ./
+RUN dotnet publish -c Release --no-restore -o /app/publish /p:UseAppHost=false
+
+# --- Runtime stage ---
+# Chiseled image: minimal attack surface, runs as non-root app user
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled
+WORKDIR /app
+
+COPY --from=build /app/publish ./
+
+# PORT defaults to 80; DOTNET_EnableDiagnostics=0 disables the diagnostics server
+# (dotnet-counters / dotnet-trace), NOT logging.
+ENV PORT=80 DOTNET_EnableDiagnostics=0
+
+ENTRYPOINT ["dotnet", "HelloWorld.dll"]
