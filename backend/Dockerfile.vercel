@@ -6,8 +6,8 @@ WORKDIR /src
 COPY HelloWorld.csproj ./
 RUN dotnet restore
 
-# Copy source and publish a self-contained Release build
-COPY Program.cs ./
+# Copy all source files (Models/, Services/, Controllers/, Program.cs)
+COPY . .
 RUN dotnet publish -c Release --no-restore -o /app/publish /p:UseAppHost=false
 
 # --- Runtime stage ---
@@ -21,4 +21,4 @@ COPY --from=build /app/publish ./
 # (dotnet-counters / dotnet-trace), NOT logging.
 ENV PORT=80 DOTNET_EnableDiagnostics=0
 
-ENTRYPOINT ["dotnet", "HelloWorld.dll"]
+ENTRYPOINT ["dotnet", "BIDashboard.dll"]

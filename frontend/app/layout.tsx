@@ -1,19 +1,16 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from 'next'
+import './globals.css'
+import { font } from '@/lib/tokens'
 
 export const metadata: Metadata = {
-  title: 'HelloWorld API Dashboard',
-  description: 'Live dashboard for the .NET HelloWorld API deployed on Vercel',
-};
+  title: 'BI Dashboard',
+  description: 'Upload a CSV or Excel file and get instant charts and insights.',
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body style={{ fontFamily: font.family }}>{children}</body>
     </html>
-  );
+  )
 }
