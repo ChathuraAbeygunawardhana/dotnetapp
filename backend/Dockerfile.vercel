@@ -1,5 +1,5 @@
 # --- Build stage ---
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy project manifest first so Docker can cache the restore layer
@@ -12,7 +12,7 @@ RUN dotnet publish -c Release --no-restore -o /app/publish /p:UseAppHost=false
 
 # --- Runtime stage ---
 # Chiseled image: minimal attack surface, runs as non-root app user
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble-chiseled
 WORKDIR /app
 
 COPY --from=build /app/publish ./

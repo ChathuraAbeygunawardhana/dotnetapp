@@ -8,7 +8,5 @@
       "runtime": "container"
     }
   },
-  "rewrites": [
-    { "source": "/(.*)", "destination": { "service": "api" } }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": { "service": "api" } }]
 }
