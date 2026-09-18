@@ -1,39 +1,42 @@
 'use client'
-import { color, font, radius, shadow, space } from '@/lib/tokens'
+import { color, font, rawColors } from '@/lib/tokens'
+import { useTheme } from '@/lib/ThemeContext'
 import { ChartSpec } from '@/lib/types'
-import { chartColors } from '@/lib/tokens'
+import { radius, shadow, space } from '@/lib/tokens'
 import {
   LineChart, Line, BarChart, Bar,
   PieChart, Pie, Cell,
   ScatterChart, Scatter,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 
 interface Props { spec: ChartSpec }
 
 export function ChartCard({ spec }: Props) {
-  const tickStyle = { fontFamily: font.family, fontSize: 11, fill: color.muted }
+  const { theme } = useTheme()
+  const raw = rawColors[theme]
+  const tickStyle = { fontFamily: font.family, fontSize: 11, fill: raw.muted }
 
   const renderChart = () => {
     switch (spec.type) {
       case 'LineChart':
         return (
           <LineChart data={spec.data}>
-            <CartesianGrid strokeDasharray="3 3" stroke={color.border} />
-            <XAxis dataKey={spec.xKey} tick={tickStyle} tickLine={false} axisLine={{ stroke: color.border }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={raw.border} />
+            <XAxis dataKey={spec.xKey} tick={tickStyle} tickLine={false} axisLine={{ stroke: raw.border }} />
             <YAxis tick={tickStyle} tickLine={false} axisLine={false} />
-            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, borderColor: color.border }} />
-            <Line type="monotone" dataKey={spec.yKey} stroke={chartColors[0]} strokeWidth={2} dot={false} />
+            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, background: color.surface, borderColor: raw.border, color: color.text }} />
+            <Line type="monotone" dataKey={spec.yKey} stroke={raw.line} strokeWidth={2} dot={false} />
           </LineChart>
         )
       case 'BarChart':
         return (
           <BarChart data={spec.data}>
-            <CartesianGrid strokeDasharray="3 3" stroke={color.border} vertical={false} />
-            <XAxis dataKey={spec.xKey} tick={tickStyle} tickLine={false} axisLine={{ stroke: color.border }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={raw.border} vertical={false} />
+            <XAxis dataKey={spec.xKey} tick={tickStyle} tickLine={false} axisLine={{ stroke: raw.border }} />
             <YAxis tick={tickStyle} tickLine={false} axisLine={false} />
-            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, borderColor: color.border }} />
-            <Bar dataKey={spec.yKey} fill={chartColors[0]} radius={[2, 2, 0, 0]} />
+            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, background: color.surface, borderColor: raw.border, color: color.text }} />
+            <Bar dataKey={spec.yKey} fill={raw.line} radius={[2, 2, 0, 0]} />
           </BarChart>
         )
       case 'PieChart':
@@ -45,20 +48,20 @@ export function ChartCard({ spec }: Props) {
               labelLine={false}
             >
               {spec.data.map((_, i) => (
-                <Cell key={i} fill={chartColors[i % chartColors.length]} />
+                <Cell key={i} fill={raw.chart[i % raw.chart.length]} />
               ))}
             </Pie>
-            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, borderColor: color.border }} />
+            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, background: color.surface, borderColor: raw.border, color: color.text }} />
           </PieChart>
         )
       case 'ScatterChart':
         return (
           <ScatterChart>
-            <CartesianGrid strokeDasharray="3 3" stroke={color.border} />
-            <XAxis dataKey={spec.xKey} name={spec.xKey} tick={tickStyle} tickLine={false} axisLine={{ stroke: color.border }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={raw.border} />
+            <XAxis dataKey={spec.xKey} name={spec.xKey} tick={tickStyle} tickLine={false} axisLine={{ stroke: raw.border }} />
             <YAxis dataKey={spec.yKey} name={spec.yKey} tick={tickStyle} tickLine={false} axisLine={false} />
-            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, borderColor: color.border }} cursor={{ strokeDasharray: '3 3' }} />
-            <Scatter data={spec.data} fill={chartColors[0]} />
+            <Tooltip contentStyle={{ fontFamily: font.family, fontSize: 12, background: color.surface, borderColor: raw.border, color: color.text }} cursor={{ strokeDasharray: '3 3' }} />
+            <Scatter data={spec.data} fill={raw.line} />
           </ScatterChart>
         )
     }

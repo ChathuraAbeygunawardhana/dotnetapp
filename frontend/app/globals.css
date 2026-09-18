@@ -4,17 +4,63 @@
 
 html { font-size: 16px; }
 
+/* ── Light theme (default) ─────────────────────────────────────────────────── */
+:root, [data-theme="light"] {
+  --color-bg:           #FFFFFF;
+  --color-surface:      #F5F5F5;
+  --color-border:       #D4D4D4;
+  --color-border-strong:#0A0A0A;
+  --color-text:         #0A0A0A;
+  --color-muted:        #737373;
+  --color-accent:       #0A0A0A;
+  --color-inverse:      #FFFFFF;
+  --color-error:        #B91C1C;
+  --color-error-bg:     #FEF2F2;
+  --color-error-border: #FECACA;
+}
+
+/* ── Dark theme ────────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --color-bg:           #0C0C0C;
+  --color-surface:      #161616;
+  --color-border:       #2A2A2A;
+  --color-border-strong:#F0F0F0;
+  --color-text:         #F0F0F0;
+  --color-muted:        #888888;
+  --color-accent:       #F0F0F0;
+  --color-inverse:      #0C0C0C;
+  --color-error:        #F87171;
+  --color-error-bg:     #1C0000;
+  --color-error-border: #7F1D1D;
+}
+
 body {
   font-family: "Space Grotesk", system-ui, sans-serif;
   font-size: 0.9375rem;
   line-height: 1.5;
-  color: #0A0A0A;
-  background: #FFFFFF;
+  color: var(--color-text);
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
+  transition: background 0.05s, color 0.05s;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #F5F5F5; }
-::-webkit-scrollbar-thumb { background: #D4D4D4; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #A3A3A3; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+
+/* ── View Transition — color wipe from right (elements stay fixed) ─────────── */
+/* The new theme is revealed by a clip-path sweeping from right → left.        */
+/* The old theme stays perfectly still underneath until it is covered.         */
+@keyframes vt-color-wipe {
+  from { clip-path: inset(0 0 0 100%); }   /* new theme hidden off-right     */
+  to   { clip-path: inset(0 0 0 0%); }     /* new theme fully revealed       */
+}
+
+::view-transition-new(root) {
+  animation: vt-color-wipe 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+}
+::view-transition-old(root) {
+  animation: none;                          /* old theme stays in place       */
+}
