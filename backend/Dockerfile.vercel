@@ -11,14 +11,16 @@ COPY . .
 RUN dotnet publish -c Release --no-restore -o /app/publish /p:UseAppHost=false
 
 # --- Runtime stage ---
-# Chiseled image: minimal attack surface, runs as non-root app user
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble-chiseled
+# Standard Debian-based image: required by Vercel's container runtime
+# (chiseled/distroless images strip system libs that Vercel's health checks need)
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 
 COPY --from=build /app/publish ./
 
-# PORT defaults to 80; DOTNET_EnableDiagnostics=0 disables the diagnostics server
-# (dotnet-counters / dotnet-trace), NOT logging.
-ENV PORT=80 DOTNET_EnableDiagnostics=0
+# Vercel injects PORT at runtime — do not hardcode 80.
+# DOTNET_EnableDiagnostics=0 disables the diagnostics server (dotnet-counters /
+# dotnet-trace) but does NOT suppress application logging.
+ENV DOTNET_EnableDiagnostics=0
 
 ENTRYPOINT ["dotnet", "BIDashboard.dll"]
