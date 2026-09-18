@@ -124,7 +124,52 @@ export default function Home() {
           alignItems: "start",
         }}
       >
-        {/* LEFT — file guide */}
+        {/* LEFT — upload controls */}
+        <div>
+          <UploadSection onResult={setResult} />
+
+          {/* File Constraints below the dropzone on the left */}
+          <div
+            style={{
+              marginTop: space[4],
+              border: `1px solid ${color.border}`,
+              borderRadius: radius.md,
+              overflow: "hidden",
+            }}
+          >
+            <div style={{ padding: space[4] }}>
+              <p
+                style={{
+                  fontFamily: font.family,
+                  fontSize: font.size.xs,
+                  fontWeight: font.weight.semibold,
+                  color: color.muted,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  marginBottom: space[3],
+                }}
+              >
+                File Constraints
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: space[2] }}>
+                {[
+                  ["Format", "CSV (.csv) or Excel (.xlsx)"],
+                  ["Max size", "50 MB"],
+                  ["First row", "Must be column headers"],
+                  ["Min rows", "At least 2 data rows"],
+                  ["Encoding", "UTF-8 recommended for CSV"],
+                ].map(([k, v]) => (
+                  <div key={k} style={{ display: "flex", gap: space[3], alignItems: "baseline" }}>
+                    <span style={{ fontFamily: font.family, fontSize: font.size.sm, fontWeight: font.weight.medium, color: color.text, minWidth: "72px" }}>{k}</span>
+                    <span style={{ fontFamily: font.family, fontSize: font.size.sm, color: color.muted }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT — guide: column types + optimal structure */}
         <div
           style={{
             border: `1px solid ${color.border}`,
@@ -132,37 +177,6 @@ export default function Home() {
             overflow: "hidden",
           }}
         >
-          {/* Constraints */}
-          <div style={{ padding: space[4], borderBottom: `1px solid ${color.border}` }}>
-            <p
-              style={{
-                fontFamily: font.family,
-                fontSize: font.size.xs,
-                fontWeight: font.weight.semibold,
-                color: color.muted,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                marginBottom: space[3],
-              }}
-            >
-              File Constraints
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: space[2] }}>
-              {[
-                ["Format", "CSV (.csv) or Excel (.xlsx)"],
-                ["Max size", "50 MB"],
-                ["First row", "Must be column headers"],
-                ["Min rows", "At least 2 data rows"],
-                ["Encoding", "UTF-8 recommended for CSV"],
-              ].map(([k, v]) => (
-                <div key={k} style={{ display: "flex", gap: space[3], alignItems: "baseline" }}>
-                  <span style={{ fontFamily: font.family, fontSize: font.size.sm, fontWeight: font.weight.medium, color: color.text, minWidth: "72px" }}>{k}</span>
-                  <span style={{ fontFamily: font.family, fontSize: font.size.sm, color: color.muted }}>{v}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Column types */}
           <div style={{ padding: space[4], borderBottom: `1px solid ${color.border}` }}>
             <p
@@ -289,11 +303,6 @@ export default function Home() {
               More columns = richer charts. Empty cells are skipped automatically.
             </p>
           </div>
-        </div>
-
-        {/* RIGHT — upload controls */}
-        <div>
-          <UploadSection onResult={setResult} />
         </div>
       </div>
     </main>
